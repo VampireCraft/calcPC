@@ -7,8 +7,98 @@ public class Main {
     }
 
     public static String calc(String input){
+        String fullTask = input.toUpperCase();
+        boolean operator = false;
+        boolean firstRim = false;
+        boolean secondRim = false;
+        String delimeter = "";
+        StringBuilder newTask = new StringBuilder();
 
-        return null;
+        for (char symbol:fullTask.toCharArray()) {
+            switch (symbol){
+                case 'I':
+                case 'V':
+                case 'X':
+                case 'L':
+                case 'C':
+                case 'D':
+                case 'M':
+                    newTask.append(symbol);
+                    if (operator)
+                        firstRim = true;
+                    else
+                        secondRim = true;
+                    break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    newTask.append(symbol);
+                    break;
+                case ' ':
+                case ' ':
+                    break;
+                case '+':
+                    newTask.append('_');
+                    delimeter = "_";
+                    if (operator)
+                        throw new IllegalArgumentException(input + " формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+                    else
+                        operator = true;
+                    break;
+                case '-':
+                case '/':
+                case '*':
+                    newTask.append(symbol);
+                    delimeter = String.valueOf(symbol);
+                    if (operator)
+                        throw new IllegalArgumentException(input + " формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+                    else
+                        operator = true;
+                    break;
+                default:
+                    throw new IllegalArgumentException(input + " неправильно поставлена задача ");
+            }
+        }
+
+        if (firstRim==secondRim){
+            String[] nums = newTask.toString().split(delimeter,2);
+            if (firstRim){
+                switch (delimeter){
+                    case "_":
+                        return arabicToRoman(romanToArabic(nums[0])+romanToArabic(nums[1]));
+                    case "-":
+                        return arabicToRoman(romanToArabic(nums[0])-romanToArabic(nums[1]));
+                    case "/":
+                        return arabicToRoman(romanToArabic(nums[0])/romanToArabic(nums[1]));
+                    case "*":
+                        return arabicToRoman(romanToArabic(nums[0])*romanToArabic(nums[1]));
+                    default:
+                        throw new IllegalArgumentException(input + " строка не является математической операцией  ");
+                }
+            } else {
+                switch (delimeter){
+                    case "_":
+                        return String.valueOf(Integer.parseInt(nums[0])+Integer.parseInt(nums[1]));
+                    case "-":
+                        return String.valueOf(Integer.parseInt(nums[0])-Integer.parseInt(nums[1]));
+                    case "/":
+                        return String.valueOf(Integer.parseInt(nums[0])/Integer.parseInt(nums[1]));
+                    case "*":
+                        return String.valueOf(Integer.parseInt(nums[0])*Integer.parseInt(nums[1]));
+                    default:
+                        throw new IllegalArgumentException(input + " строка не является математической операцией  ");
+                }
+            }
+        }
+        else
+            throw new IllegalArgumentException(input + " используются одновременно разные системы счисления");
     }
 
     public static int romanToArabic(String input) {
