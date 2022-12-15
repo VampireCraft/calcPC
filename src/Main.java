@@ -148,5 +148,4 @@ public class Main {
 
         return rimNum.toString();
     }
-
 }
