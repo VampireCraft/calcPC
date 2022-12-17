@@ -54,9 +54,16 @@ public class Main {
                     break;
                 case '-':
                 case '/':
-                case '*':
                     newTask.append(symbol);
                     delimeter = String.valueOf(symbol);
+                    if (operator)
+                        throw new IllegalArgumentException(input + " формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+                    else
+                        operator = true;
+                    break;
+                case '*':
+                    newTask.append(':');
+                    delimeter = ":";
                     if (operator)
                         throw new IllegalArgumentException(input + " формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
                     else
@@ -77,23 +84,27 @@ public class Main {
                         return arabicToRoman(romanToArabic(nums[0])-romanToArabic(nums[1]));
                     case "/":
                         return arabicToRoman(romanToArabic(nums[0])/romanToArabic(nums[1]));
-                    case "*":
+                    case ":":
                         return arabicToRoman(romanToArabic(nums[0])*romanToArabic(nums[1]));
                     default:
                         throw new IllegalArgumentException(input + " строка не является математической операцией  ");
                 }
             } else {
-                switch (delimeter){
-                    case "_":
-                        return String.valueOf(Integer.parseInt(nums[0])+Integer.parseInt(nums[1]));
-                    case "-":
-                        return String.valueOf(Integer.parseInt(nums[0])-Integer.parseInt(nums[1]));
-                    case "/":
-                        return String.valueOf(Integer.parseInt(nums[0])/Integer.parseInt(nums[1]));
-                    case "*":
-                        return String.valueOf(Integer.parseInt(nums[0])*Integer.parseInt(nums[1]));
-                    default:
-                        throw new IllegalArgumentException(input + " строка не является математической операцией  ");
+                if (Integer.parseInt(nums[0]) < 11 && Integer.parseInt(nums[1]) < 11 && Integer.parseInt(nums[1]) > 0 && Integer.parseInt(nums[0]) > 0) {
+                    switch (delimeter) {
+                        case "_":
+                            return String.valueOf(Integer.parseInt(nums[0]) + Integer.parseInt(nums[1]));
+                        case "-":
+                            return String.valueOf(Integer.parseInt(nums[0]) - Integer.parseInt(nums[1]));
+                        case "/":
+                            return String.valueOf(Integer.parseInt(nums[0]) / Integer.parseInt(nums[1]));
+                        case ":":
+                            return String.valueOf(Integer.parseInt(nums[0]) * Integer.parseInt(nums[1]));
+                        default:
+                            throw new IllegalArgumentException(input + " строка не является математической операцией  ");
+                    }
+                }else {
+                    throw new IllegalArgumentException(input + " превышен диапазон числа 1-10  ");
                 }
             }
         }
@@ -121,6 +132,10 @@ public class Main {
 
         if (rimNum.length() > 0) {
             throw new IllegalArgumentException(input + " невозможно конвертировать");
+        }
+
+        if (result>10){
+            throw new IllegalArgumentException(input + " превышен диапазон числа 1-10");
         }
 
         return result;
